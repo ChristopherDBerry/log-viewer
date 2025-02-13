@@ -26,6 +26,10 @@ import type {
   DeleteLogs200,
   DeleteLogs500,
   GetLogs200,
+  GetLogsAggregate200Item,
+  GetLogsAggregate400,
+  GetLogsAggregate500,
+  GetLogsAggregateParams,
   GetLogsParams,
   PostUpload200,
   PostUpload400,
@@ -33,6 +37,95 @@ import type {
   PostUploadBody
 } from '../logViewerAPI.schemas'
 import { customFetcher } from '../../mutator';
+
+
+
+/**
+ * Retrieves aggregated log data grouped by a specific field and timeframe.
+ * @summary Get aggregated log data
+ */
+export const getLogsAggregate = (
+    params: GetLogsAggregateParams,
+ signal?: AbortSignal
+) => {
+      
+      
+      return customFetcher<GetLogsAggregate200Item[]>(
+      {url: `/logs/aggregate`, method: 'GET',
+        params, signal
+    },
+      );
+    }
+  
+
+export const getGetLogsAggregateQueryKey = (params: GetLogsAggregateParams,) => {
+    return [`/logs/aggregate`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getGetLogsAggregateQueryOptions = <TData = Awaited<ReturnType<typeof getLogsAggregate>>, TError = GetLogsAggregate400 | GetLogsAggregate500>(params: GetLogsAggregateParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLogsAggregate>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetLogsAggregateQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getLogsAggregate>>> = ({ signal }) => getLogsAggregate(params, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getLogsAggregate>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetLogsAggregateQueryResult = NonNullable<Awaited<ReturnType<typeof getLogsAggregate>>>
+export type GetLogsAggregateQueryError = GetLogsAggregate400 | GetLogsAggregate500
+
+
+export function useGetLogsAggregate<TData = Awaited<ReturnType<typeof getLogsAggregate>>, TError = GetLogsAggregate400 | GetLogsAggregate500>(
+ params: GetLogsAggregateParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLogsAggregate>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getLogsAggregate>>,
+          TError,
+          Awaited<ReturnType<typeof getLogsAggregate>>
+        > , 'initialData'
+      >, }
+
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetLogsAggregate<TData = Awaited<ReturnType<typeof getLogsAggregate>>, TError = GetLogsAggregate400 | GetLogsAggregate500>(
+ params: GetLogsAggregateParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLogsAggregate>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getLogsAggregate>>,
+          TError,
+          Awaited<ReturnType<typeof getLogsAggregate>>
+        > , 'initialData'
+      >, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetLogsAggregate<TData = Awaited<ReturnType<typeof getLogsAggregate>>, TError = GetLogsAggregate400 | GetLogsAggregate500>(
+ params: GetLogsAggregateParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLogsAggregate>>, TError, TData>>, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get aggregated log data
+ */
+
+export function useGetLogsAggregate<TData = Awaited<ReturnType<typeof getLogsAggregate>>, TError = GetLogsAggregate400 | GetLogsAggregate500>(
+ params: GetLogsAggregateParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLogsAggregate>>, TError, TData>>, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetLogsAggregateQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
 
 
 

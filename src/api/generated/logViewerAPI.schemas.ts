@@ -5,6 +5,62 @@
  * API for fetching and uploading logs
  * OpenAPI spec version: 1.0.0
  */
+export type GetLogsAggregateParams = {
+/**
+ * Page number
+ */
+page?: number;
+/**
+ * Number of logs per page
+ */
+limit?: number;
+/**
+ * Timeframe for aggregation (hourly, daily, weekly).
+ */
+timeframe: GetLogsAggregateTimeframe;
+/**
+ * Field to aggregate (service, level, message).
+ */
+field: GetLogsAggregateField;
+};
+
+export type GetLogsAggregateTimeframe = typeof GetLogsAggregateTimeframe[keyof typeof GetLogsAggregateTimeframe];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GetLogsAggregateTimeframe = {
+  hourly: 'hourly',
+  daily: 'daily',
+  weekly: 'weekly',
+} as const;
+
+export type GetLogsAggregateField = typeof GetLogsAggregateField[keyof typeof GetLogsAggregateField];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GetLogsAggregateField = {
+  service: 'service',
+  level: 'level',
+  message: 'message',
+} as const;
+
+export type GetLogsAggregate200Item = {
+  /** Timestamp of the aggregation. */
+  time?: string;
+  /** Aggregated field value. */
+  field?: string;
+  /** Total count of logs for this aggregation. */
+  total?: number;
+};
+
+export type GetLogsAggregate400 = {
+  error?: string;
+};
+
+export type GetLogsAggregate500 = {
+  error?: string;
+};
+
 export type PostUploadBody = {
   file: Blob;
 };
